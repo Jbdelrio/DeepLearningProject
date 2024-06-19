@@ -1,0 +1,49 @@
+
+
+### Explications détaillées :
+
+1. **Chargement des données** :
+   - `df = yf.download('IBM', start='2009-07-01', end='2019-07-31')` : Télécharge les données de l'action IBM entre le 1er juillet 2009 et le 31 juillet 2019.
+   - `data = df['Close'].values.reshape(-1, 1)` : Sélectionne les prix de clôture et les convertit en tableau 2D.
+
+2. **Normalisation des données** :
+   - `scaler = MinMaxScaler(feature_range=(0, 1))` : Initialise un scaler pour normaliser les données entre 0 et 1.
+   - `scaled_data = scaler.fit_transform(data)` : Applique la normalisation aux données.
+
+3. **Division des données en ensembles d'entraînement et de test** :
+   - `training_data_len = int(np.ceil(len(data) * 0.70))` : Calcule la longueur de l'ensemble d'entraînement (70% des données).
+   - `train_data = scaled_data[:training_data_len]` : Données d'entraînement.
+   - `test_data = scaled_data[training_data_len:]` : Données de test.
+
+4. **Création de datasets avec des timestamps `look_back`** :
+   - `create_dataset` : Fonction qui crée des ensembles d'entrée (X) et de sortie (Y) avec des séquences de `look_back` timestamps.
+
+5. **Reshape des entrées pour être [échantillons, pas de temps, caractéristiques]** :
+   - `X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))` : Reshape des données d'entraînement.
+   - `X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))` : Reshape des données de test.
+
+6. **Fonction pour ajuster le modèle LSTM ou BiLSTM** :
+   - `fit_lstm_bilstm` : Fonction qui crée et ajuste un modèle LSTM ou BiLSTM en fonction de l'option choisie (`L` pour LSTM, `B` pour BiLSTM).
+
+7. **Fonction pour faire des prédictions avec LSTM/BiLSTM** :
+   - `forecast_lstm` : Fonction qui utilise un modèle LSTM/BiLSTM pour prédire les valeurs futures.
+
+8. **Fonction pour calculer le RMSE** :
+   - `calculate_rmse` : Calcule le RMSE entre les valeurs réelles et prédites.
+
+9. **Ajuster les modèles et calculer les prédictions** :
+   - Ajustement des modèles LSTM et BiLSTM.
+   - Calcul des prédictions et inverse transformation pour revenir à l'échelle originale.
+
+10. **Ajuster le modèle ARIMA** :
+   
+
+ - `fit_arima` : Fonction qui ajuste un modèle ARIMA sur les données d'entraînement et prédit les valeurs futures.
+
+11. **Calculer la réduction en % du RMSE** :
+    - `calculate_reduction` : Calcule la réduction du RMSE entre deux valeurs.
+
+12. **Affichage des résultats** :
+    - Impression des RMSE et des réductions.
+    - Affichage de quelques prédictions pour vérification.
+    - Tracé des données d'entraînement, de test et des prédictions des modèles LSTM, BiLSTM et ARIMA.
